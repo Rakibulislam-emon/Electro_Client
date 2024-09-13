@@ -1,71 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../../hooks/useAxios";
 import BestDealsCard from "./BestDealsCard";
 import BestDealsTabs from "./BestDealsTabs";
 // import consol from '../../../assets/gamingConsole/consal.png'
 import Console360View from "./Console360View";
 
 export default function BestDeals() {
-    const data = [
-        {
-            "brand": "Cameras & Photography",
-            "gadget_name": "Camera C430W 4k Waterproof",
-            "title": "4k Waterproof Camera",
-            "price": "$200",
-            "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-            "tags": ["Cameras", "Photography", "Waterproof"]
+    const axios = useAxios()
+      // get all products
+      const { data: bestDeals = [] } = useQuery({
+        queryKey: ['BestDeals'],
+        queryFn: async () => {
+            const response = await axios.get('/api/bestDeals')
+            return response.data
         },
-        {
-            "brand": "Tech Gadgets",
-            "gadget_name": "Smartwatch X100",
-            "title": "Smartwatch X100 with Health Monitoring",
-            "price": "$150",
-            "image_url": "https://images.unsplash.com/photo-1506748686214e9df14f8f7b5d0b9125",
-            "tags": ["Smartwatch", "Wearable", "Health"]
-        },
-        {
-            "brand": "AudioPro",
-            "gadget_name": "Bluetooth Speaker Z500",
-            "title": "Portable Bluetooth Speaker Z500",
-            "price": "$80",
-            "image_url": "https://images.unsplash.com/photo-1517889066371-26e5f2b3a586",
-            "tags": ["Audio", "Bluetooth", "Portable"]
-        },
-        {
-            "brand": "HomeTech",
-            "gadget_name": "Smart Thermostat T1",
-            "title": "Smart Thermostat T1 with Wi-Fi",
-            "price": "$120",
-            "image_url": "https://images.unsplash.com/photo-1573574698817-dde2ac76c0cf",
-            "tags": ["Home Automation", "Smart Home", "Thermostat"]
-        },
-        {
-            "brand": "GadgetWorld",
-            "gadget_name": "Wireless Earbuds E200",
-            "title": "Wireless Earbuds E200 with Noise Cancellation",
-            "price": "$90",
-            "image_url": "https://images.unsplash.com/photo-1586110795804-57dc1b8b768a",
-            "tags": ["Earbuds", "Wireless", "Noise Cancellation"]
-        },
-        {
-            "brand": "GadgetWorld",
-            "gadget_name": "Wireless Earbuds E200",
-            "title": "Wireless Earbuds E200 with Noise Cancellation",
-            "price": "$90",
-            "image_url": "https://images.unsplash.com/photo-1586110795804-57dc1b8b768a",
-            "tags": ["Earbuds", "Wireless", "Noise Cancellation"]
-        },
-        {
-            "brand": "GadgetWorld",
-            "gadget_name": "Wireless Earbuds E200",
-            "title": "Wireless Earbuds E200 with Noise Cancellation",
-            "price": "$90",
-            "image_url": "https://images.unsplash.com/photo-1586110795804-57dc1b8b768a",
-            "tags": ["Earbuds", "Wireless", "Noise Cancellation"]
-        },
-    ];
+    })
+ 
+
+  
 
     // Loop the data and only get the first 4 items
-    const first4th = data.slice(0, 4);
-    const second4th = data.slice(0, 4);
+    const first4th = bestDeals.slice(0, 4);
+    const second4th = bestDeals.slice(4, 8);
 
     return (
         <main className="flex flex-col mb-8  lg:flex-row">

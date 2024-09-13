@@ -9,6 +9,7 @@ import watch from '../../assets/banner/smartwatches-resized.png';
 import bg from '../../assets/banner/background.jpg';
 
 export default function Banner() {
+ 
   return (
     <div className='z-[1000] lg:mt-4'>
       <Swiper

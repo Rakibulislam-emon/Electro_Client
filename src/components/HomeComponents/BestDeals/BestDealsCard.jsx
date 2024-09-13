@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 export default function BestDealsCard({ info }) {
     // price will be added later
-    const { brand, gadget_name, title, price, tags } = info;
+    const { brand, title, price,image, tags } = info;
 
     return (
         <div className="bg-white rounded-lg shadow-lg  sm:p-6 relative border max-w-xs sm:max-w-sm lg:max-w-md mx-auto flex flex-col h-full">
             <div className="relative overflow-hidden h-40 sm:h-48 lg:h-56">
-            <img className="object-cover w-full h-full" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" alt="Product" />
+            <img className="object-cover w-full h-full" src={image} alt="Product" />
                 <div className="absolute inset-0 bg-black opacity-40"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <button className="bg-white text-gray-900 py-2 px-4 sm:py-2.5 sm:px-6 rounded-full font-bold hover:bg-gray-300">View Product</button>
@@ -14,7 +14,7 @@ export default function BestDealsCard({ info }) {
             </div>
             <div className="flex flex-col flex-grow mt-4">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-900">{title}</h3>
-                <p className="text-gray-500 text-xs sm:text-sm mt-1">{`${brand} - ${gadget_name}`}</p>
+                <p className="text-blue-700 font-semibold text-xs sm:text-sm mt-1">Brand:  {`${brand} `}</p>
                 <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 mb-8">
                     {tags.map((tag, index) => (
                         <span key={index} className="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full">

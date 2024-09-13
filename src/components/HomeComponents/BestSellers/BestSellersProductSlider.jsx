@@ -1,30 +1,30 @@
 import  { useState } from 'react';
-import demo from '../../../assets/gamingConsole/consal-300x300.png'; // Demo image import
+import useAxios from '../../../hooks/useAxios'
+import { useQuery } from "@tanstack/react-query";
 
 export default function BestSellersProductSlider() {
-    const data = [
-        { "name": "iPhone 13 Pro", "price": 999, "tags": ["smartphone", "Apple", "iOS", "5G"] },
-        { "name": "Samsung Galaxy S21", "price": 799, "tags": ["smartphone", "Android", "Samsung", "5G"] },
-        { "name": "Dell XPS 13", "price": 1200, "tags": ["laptop", "Windows", "Dell", "ultrabook"] },
-        { "name": "MacBook Air M1", "price": 999, "tags": ["laptop", "Apple", "macOS", "M1 chip"] },
-        { "name": "Sony Alpha A7 III", "price": 1999, "tags": ["camera", "Sony", "mirrorless", "4K video"] },
-        { "name": "Bose QC 35 II", "price": 299, "tags": ["headphones", "Bose", "noise-canceling", "Bluetooth"] },
-        { "name": "iPad Pro", "price": 1099, "tags": ["tablet", "Apple", "iOS", "ProMotion"] },
-        { "name": "Google Pixel 6", "price": 599, "tags": ["smartphone", "Google", "Android", "5G"] },
-        { "name": "Sony WH-1000XM4", "price": 349, "tags": ["headphones", "Sony", "noise-canceling", "Bluetooth"] },
-        { "name": "Asus ROG Zephyrus", "price": 1499, "tags": ["laptop", "gaming", "Asus", "Windows", "RTX 3060"] }
-    ];
+    const axios = useAxios()
+    // get all products
+    const { data: bestSells = [] } = useQuery({
+      queryKey: ['BestSells'],
+      queryFn: async () => {
+          const response = await axios.get('/api/bestSells')
+          return response.data
+      },
+  })
+
+  
 
     const itemsPerPage = 6; // Now showing 6 items per page for better row distribution
     const [currentPage, setCurrentPage] = useState(1); // Current page state
 
     // Calculate the total number of pages
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const totalPages = Math.ceil(bestSells.length / itemsPerPage);
 
     // Get the products to display for the current page
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = bestSells.slice(indexOfFirstItem, indexOfLastItem);
 
     // Handle next and previous page navigation
     const handleNextPage = () => {
@@ -41,14 +41,12 @@ export default function BestSellersProductSlider() {
 
     return (
         <div>
-            <h2 className="text-center text-3xl font-bold mb-8">Best Sellers</h2>
-
             {/* Display current products */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-2 mt-8">
                 {currentItems.map((item, index) => (
                     <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
                         <img 
-                            src={demo} 
+                            src={item.image} 
                             alt={item.name} 
                             className="w-full h-48 object-cover"
                         />

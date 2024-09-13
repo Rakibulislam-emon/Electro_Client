@@ -3,74 +3,32 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import useAxios from '../../../hooks/useAxios';
+import { useQuery } from "@tanstack/react-query";
 
 export default function RecentlyAdded() {
-  // Data array with products
-  const data = [
-    { 
-      name: "iPhone 13 Pro", 
-      price: 999, 
-      tags: ["smartphone", "Apple", "iOS", "5G"], 
-      image: "https://picsum.photos/id/237/200/300"
-    },
-    { 
-      name: "Samsung Galaxy S21", 
-      price: 799, 
-      tags: ["smartphone", "Android", "Samsung", "5G"], 
-      image: "https://picsum.photos/id/238/200/300"
-    },
-    { 
-      name: "Dell XPS 13", 
-      price: 1200, 
-      tags: ["laptop", "Windows", "Dell", "ultrabook"], 
-      image: "https://picsum.photos/id/239/200/300"
-    },
-    { 
-      name: "MacBook Air M1", 
-      price: 999, 
-      tags: ["laptop", "Apple", "macOS", "M1 chip"], 
-      image: "https://picsum.photos/id/240/200/300"
-    },
-    { 
-      name: "Sony Alpha A7 III", 
-      price: 1999, 
-      tags: ["camera", "Sony", "mirrorless", "4K video"], 
-      image: "https://picsum.photos/id/241/200/300"
-    },
-    { 
-      name: "Bose QC 35 II", 
-      price: 299, 
-      tags: ["headphones", "Bose", "noise-canceling", "Bluetooth"], 
-      image: "https://picsum.photos/id/242/200/300"
-    },
-    { 
-      name: "iPad Pro", 
-      price: 1099, 
-      tags: ["tablet", "Apple", "iOS", "ProMotion"], 
-      image: "https://picsum.photos/id/243/200/300"
-    },
-    { 
-      name: "Google Pixel 6", 
-      price: 599, 
-      tags: ["smartphone", "Google", "Android", "5G"], 
-      image: "https://picsum.photos/id/244/200/300"
-    },
-    { 
-      name: "Sony WH-1000XM4", 
-      price: 349, 
-      tags: ["headphones", "Sony", "noise-canceling", "Bluetooth"], 
-      image: "https://picsum.photos/id/245/200/300"
-    },
-    { 
-      name: "Asus ROG Zephyrus", 
-      price: 1499, 
-      tags: ["laptop", "gaming", "Asus", "Windows", "RTX 3060"], 
-      image: "https://picsum.photos/id/246/200/300"
-    }
-  ];
+
+
+
+    // get all products
+    const axios = useAxios()
+    // get all products
+    const { data: allProducts = [] } = useQuery({
+        queryKey: ['allProducts'],
+        queryFn: async () => {
+            const response = await axios.get('/api/allProducts');
+            return response.data
+        },
+    })
+
+    const sortByCreatedTime = [...allProducts].sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
+    // console.log(sortByCreatedTime);
+
+    const recentAdded = sortByCreatedTime.slice(0,20)
+   
 
   return (
-    <div className="p-4 ">
+    <div className="lg:p-4 ">
          <div>
             <h1 className='text-2xl text-gray-400  border-b my-8 pb-2'><span className='border-b-blue-500 border-b-8 rounded-full px-2'>Recently Added</span></h1>
         </div>
@@ -106,7 +64,7 @@ export default function RecentlyAdded() {
         }}
       >
        
-        {data.map((item, index) => (
+        {recentAdded.map((item, index) => (
           <SwiperSlide key={index} className="flex items-center justify-center mb-8">
             <Link className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition duration-300 hover:scale-105 w-full h-[400px]">
               <img 

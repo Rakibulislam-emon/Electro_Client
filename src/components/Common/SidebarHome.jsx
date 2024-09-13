@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 // eslint-disable-next-line react/prop-types
 export default function SidebarHome({sidebarMenu}) {
   return (
-    <nav className="bg-white shadow-lg h-screen fixed top-0 left-0 min-w-[240px] py-6 px-4 font-[sans-serif] overflow-auto z-50">
+    <nav className="bg-white shadow-lg h-screen fixed top-0 left-0 min-w-[240px] py-6 px-4 font-[sans-serif] overflow-auto z-[10000]">
       <ul>
         <li className=' flex justify-between items-center'>
           <Link
