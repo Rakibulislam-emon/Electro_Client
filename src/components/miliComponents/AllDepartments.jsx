@@ -20,11 +20,20 @@ export default function AllDepartments() {
                         <span>all AllDepartments</span>
                     </p>
                     <div className=" items-center max-w-screen-sm w-full flex justify-between">
-                        <p>all Pages</p>
+                        <p>Shop</p>
                         <p>
                             featuresBands
                         </p>
                         <p> trending styles</p>
+                        <p>
+                            gift card
+                        </p>
+                        <p>
+                            gift card
+                        </p>
+                        <p>
+                            gift card
+                        </p>
                         <p>
                             gift card
                         </p>

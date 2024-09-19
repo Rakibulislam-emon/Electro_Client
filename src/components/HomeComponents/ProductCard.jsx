@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
+
 /* eslint-disable react/prop-types */
 export default function ProductCard({ info }) {
     // img will be added later
-    const { brand,  title, price,image, tags } = info;
+    const { brand,  title, price,image, tags, _id } = info;
 
     return (
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 relative flex flex-col h-full">
@@ -9,7 +11,8 @@ export default function ProductCard({ info }) {
                 <img className="object-cover w-full h-full" src={image} alt="Product" />
                 <div className="absolute inset-0 bg-black opacity-40"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="bg-white text-gray-900 py-2 px-4 sm:py-2.5 sm:px-6 rounded-full font-bold hover:bg-gray-300">View Product</button>
+                   <Link to={`/product/${_id}`}> <button className="bg-white text-gray-900 py-2 px-4 sm:py-2.5 sm:px-6 rounded-full font-bold hover:bg-gray-300">View Product</button>
+                   </Link>
                 </div>
             </div>
             <div className="flex flex-col flex-grow mt-4">

@@ -16,16 +16,17 @@ export default function RecentlyAdded() {
     const { data: allProducts = [] } = useQuery({
         queryKey: ['allProducts'],
         queryFn: async () => {
-            const response = await axios.get('/api/allProducts');
+            const response = await axios.get('/api/recently');
             return response.data
         },
     })
-
+console.log(allProducts);
     const sortByCreatedTime = [...allProducts].sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
     // console.log(sortByCreatedTime);
 
     const recentAdded = sortByCreatedTime.slice(0,20)
-   
+  //  make a function to send data to serve
+ 
 
   return (
     <div className="lg:p-4 ">
@@ -66,7 +67,9 @@ export default function RecentlyAdded() {
        
         {recentAdded.map((item, index) => (
           <SwiperSlide key={index} className="flex items-center justify-center mb-8">
-            <Link className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition duration-300 hover:scale-105 w-full h-[400px]">
+            <Link
+            to={`/product/${item?._id}`}
+            className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition duration-300 hover:scale-105 w-full h-[400px]">
               <img 
                 src={item.image} 
                 alt={item.name} 

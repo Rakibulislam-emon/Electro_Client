@@ -21,7 +21,7 @@ export default function BestDealsTabs() {
           className={`text-gray-600 hover:text-gray-900 px-2 md:px-4 py-1 md:py-2 rounded-lg 
           ${index === 0 ? 'border-b-4 border-blue-500' : ''}`}
         >
-          <span className="text-base md:text-lg lg:text-2xl">{tab.title}</span>
+          <span className="text-base md:text-lg lg:text-2xl ">{tab.title}</span>
         </Link>
       ))}
     </div>

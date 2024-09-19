@@ -11,9 +11,9 @@ import {
 const queryClient = new QueryClient()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-<QueryClientProvider client={queryClient}>
-    <RouterProvider router={route}>
-    </RouterProvider>
-</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={route}>
+      </RouterProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

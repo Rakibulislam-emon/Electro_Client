@@ -1,19 +1,20 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import useAxios from '../../../hooks/useAxios'
 import { useQuery } from "@tanstack/react-query";
+import { Link } from 'react-router-dom';
 
 export default function BestSellersProductSlider() {
     const axios = useAxios()
     // get all products
     const { data: bestSells = [] } = useQuery({
-      queryKey: ['BestSells'],
-      queryFn: async () => {
-          const response = await axios.get('/api/bestSells')
-          return response.data
-      },
-  })
+        queryKey: ['BestSells'],
+        queryFn: async () => {
+            const response = await axios.get('/api/bestSells')
+            return response.data
+        },
+    })
 
-  
+
 
     const itemsPerPage = 6; // Now showing 6 items per page for better row distribution
     const [currentPage, setCurrentPage] = useState(1); // Current page state
@@ -42,22 +43,35 @@ export default function BestSellersProductSlider() {
     return (
         <div>
             {/* Display current products */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-2 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mt-8">
                 {currentItems.map((item, index) => (
-                    <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
-                        <img 
-                            src={item.image} 
-                            alt={item.name} 
-                            className="w-full h-48 object-cover"
-                        />
+                    <div
+                        key={index}
+                        className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+                    >
+                        <div className="relative">
+                            <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-full h-64 object-cover transition-transform duration-300 transform hover:scale-110"
+                            />
+                            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-25 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <Link to={`/product/${item._id}`}>
+                                    <button className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
+                                        View Product
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
                         <div className="p-6">
-                            <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-                            <p className="text-gray-700 text-lg font-medium mb-4">${item.price}</p>
-                            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">View Product</button>
+                            <h3 className="text-2xl font-semibold mb-2 text-gray-800">{item.name}</h3>
+                            <p className="text-gray-600 text-lg font-medium mb-4">${item.price.toFixed(2)}</p>
+                            <p className="text-gray-500 text-sm mb-4">{item.description}</p>
                         </div>
                     </div>
                 ))}
             </div>
+
 
             {/* Pagination Controls */}
             <div className="flex justify-center mt-10">

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import webcam from '../../../assets/highlightProducts/footer-widget-img-01.jpg';
 import useAxios from '../../../hooks/useAxios';
+import { Link } from 'react-router-dom';
 
 export default function MixedProducts() {
 
@@ -54,28 +55,29 @@ export default function MixedProducts() {
                 {/* Products Grid */}
                 <div className="lg:col-span-3 grid sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-screen-xl mx-auto">
                     {combinedData.map((item, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl h-28 flex"
-                        >
-                            {/* Image Section */}
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-7/12 h-full object-cover"
-                            />
-
-                            {/* Content Section */}
-                            <div className="w-5/12 px-4  flex flex-col justify-between bg-gray-50">
-                                <div>
-                                    <h3 className="text-lg font-bold mb-1 text-gray-900">{item.name}</h3>
-                                    {/* tattings */}
-                                    <p>rattings</p>
-                                    <p className="text-gray-600 text-sm font-medium mb-2">${item.price}</p>
+                       <Link key={idx} to={`/product/${item._id}`}>
+                            <div
+                                className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl h-28 flex"
+                            >
+                                {/* Image Section */}
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="w-7/12 h-full object-cover"
+                                />
+    
+                                {/* Content Section */}
+                                <div className="w-5/12 px-4  flex flex-col justify-between bg-gray-50">
+                                    <div>
+                                        <h3 className="text-lg font-bold mb-1 text-gray-900">{item.name}</h3>
+                                        {/* tattings */}
+                                        <p>rattings</p>
+                                        <p className="text-gray-600 text-sm font-medium mb-2">${item.price}</p>
+                                    </div>
+    
                                 </div>
-
                             </div>
-                        </div>
+                       </Link>
                     ))}
                 </div>
 
