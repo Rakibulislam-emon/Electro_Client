@@ -18,7 +18,7 @@ export default function BestDeals() {
     const first4th = bestDeals.slice(0, 4);
     const second4th = bestDeals.slice(4, 8);
     return (
-        <main className="flex flex-col mb-8  lg:flex-row bg-[#f4f4f4] border">
+        <main className="flex flex-col mb-8  lg:flex-row bg-[#f1eded] border">
             <div className="max-w-screen-2xl mx-auto  flex-1 mb-8">
                 <div className="flex justify-center my-8">
                     <BestDealsTabs />

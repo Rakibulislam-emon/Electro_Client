@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 
 export default function BestDealsTabs() {
   const Tabs = [
-    { title: 'Best Deals', url: '/best-deals' },
-    { title: 'Tv & Audio', url: '/new-arrivals' },
-    { title: 'Cameras', url: '/top-sellers' },
-    { title: 'Smartphones', url: '/discounted-offers' },
-    { title: 'GPS & Navi', url: '/special-offers' },
-    { title: 'Computers', url: '/best-sellers' },
-    { title: 'Portable Audio', url: '/best-rated' },
-    { title: 'Accessories', url: '/most-viewed' },
+    { title: 'Best Deals', url: '/' },
+    { title: 'Tv & Audio', url: 'shop' },
+    { title: 'Cameras', url: 'shop' },
+    { title: 'Smartphones', url: 'shop' },
+    { title: 'GPS & Navi', url: 'shop' },
+    { title: 'Computers', url: 'shop' },
+    { title: 'Portable Audio', url: 'shop' },
+    { title: 'Accessories', url: 'shop' },
   ];
 
   return (

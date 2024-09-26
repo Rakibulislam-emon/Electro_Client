@@ -6,13 +6,13 @@ import Footer from "../components/Common/Footer";
 export default function Main() {
     return (
         <div>
-            <div className="hidden lg:block">
+            <div className="hidden lg:block ">
                 <Welcome />
             </div>
             {/* nav */}
             <Navbar/>
             {/* outlet */}\
-            <Outlet/>
+           <div className="min-h-[calc(100vh-55px)]"> <Outlet/></div>
             {/* footer */}
             <Footer/>
         </div>

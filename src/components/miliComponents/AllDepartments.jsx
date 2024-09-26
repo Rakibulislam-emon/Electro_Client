@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {Link} from "react-router-dom"
 import icon from '../../assets/icons/menu-button.png'
 import AllDepartmentModal from '../modals/AllDepartmentModal'
 export default function AllDepartments() {
@@ -20,7 +21,7 @@ export default function AllDepartments() {
                         <span>all AllDepartments</span>
                     </p>
                     <div className=" items-center max-w-screen-sm w-full flex justify-between">
-                        <p>Shop</p>
+                        <Link to={'/shop'} className=''>Shop</Link>
                         <p>
                             featuresBands
                         </p>

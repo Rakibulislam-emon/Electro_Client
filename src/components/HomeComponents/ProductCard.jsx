@@ -2,33 +2,53 @@ import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 export default function ProductCard({ info }) {
-    // img will be added later
-    const { brand,  title, price,image, tags, _id } = info;
+    const { brand, title, price, image, tags, _id } = info;
 
     return (
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 relative flex flex-col h-full">
-            <div className="relative overflow-hidden h-40 sm:h-48 lg:h-56">
-                <img className="object-cover w-full h-full" src={image} alt="Product" />
-                <div className="absolute inset-0 bg-black opacity-40"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                   <Link to={`/product/${_id}`}> <button className="bg-white text-gray-900 py-2 px-4 sm:py-2.5 sm:px-6 rounded-full font-bold hover:bg-gray-300">View Product</button>
-                   </Link>
+        <div className="w-full mb-8 space-y-4 rounded-lg bg-white  shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
+            <div className="relative flex h-48 w-full justify-center lg:h-[260px] rounded-lg overflow-hidden border ">
+                <img
+                    width={400}
+                    height={400}
+                    className="object-cover w-full h-full transition-transform duration-300 transform hover:scale-105"
+                    src={image}
+                    alt={title}
+                />
+                <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
+                    {/* Love Icon */}
+                    <div className="flex items-center cursor-pointer ">
+                        <svg
+                            width={30}
+                            className="fill-transparent stroke-white stroke-2 hover:fill-red-500 hover:stroke-red-500 transition-colors duration-200"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z"></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-col flex-grow mt-4">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900">{title}</h3>
-                <p className="text-blue-700 font-semibold text-xs sm:text-sm mt-1">Brand: {`${brand} `}</p>
-                <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
+            <div className="flex-grow px-4 space-y-2">
+                <h6 className="text-lg font-semibold text-gray-800">{title}</h6>
+                <p className="text-sm font-semibold text-gray-500">Brand: {brand}</p>
+                <p className="text-xl font-bold text-gray-900">${price}</p>
+                <div className="flex flex-wrap gap-1 mt-2">
                     {tags.map((tag, index) => (
-                        <span key={index} className="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+                        <span key={index} className="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
                             {tag}
                         </span>
                     ))}
                 </div>
-                <div className="mt-auto flex items-center justify-between border-t pt-4 sm:pt-6 ">
-                    <span className="text-gray-900 font-bold text-base sm:text-lg ">{price}</span>
-                    <button className="bg-gray-900 ml-10 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 w-full sm:w-auto mt-2 sm:mt-0 lg:py-1 lg:px-2 lg:w-full ">Add to Cart</button>
-                </div>
+            </div>
+            <div className="flex p-2 lg:justify-between  mt-4 justify-between  pb-4">
+                <Link to={`/product/${_id}`}>
+                    <button className="flex-grow  hover:bg-[#2563EB] py-2 font-semibold text-white rounded-lg shadow-md transition duration-300 bg-[#3B82F6]  hover:shadow-lg px-2 lg:w-28 w-40 ">
+                        View Details
+                    </button>
+                </Link>
+                <button className="flex-grow  py-2 font-semibold text-white rounded-lg shadow-md transition duration-300  hover:bg-[#059669] hover:shadow-lg bg-[#10B981] max-w-40 ml-2">
+                    Add to Cart
+                </button>
             </div>
         </div>
     );

@@ -20,7 +20,6 @@ export default function RecentlyAdded() {
             return response.data
         },
     })
-console.log(allProducts);
     const sortByCreatedTime = [...allProducts].sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
     // console.log(sortByCreatedTime);
 
@@ -85,13 +84,15 @@ console.log(allProducts);
                     ))}
                   </div>
                 </div>
+                
                 <div className="flex gap-2 mt-auto">
-                  <button className="w-1/2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-                    Add to Cart
-                  </button>
-                  <button className="w-1/2 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300">
+                <button className="w-1/2 bg-[#A78BCA] text-white py-2 rounded-lg hover:bg-[#9B7EBA] transition duration-300">
                     Wishlist
                   </button>
+                  <button className="w-1/2 bg-[#10B981] text-white py-2 rounded-lg hover:bg-[#059669] transition duration-300">
+                    Add to Cart
+                  </button>
+                
                 </div>
               </div>
             </Link>

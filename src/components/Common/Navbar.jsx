@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { GiCancel } from "react-icons/gi";
 import icon from '../../assets/icons/menu-button.png';
 import SidebarHome from "./SidebarHome";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // For search modal
@@ -50,7 +51,7 @@ export default function Navbar() {
             <div className="flex items-center flex-1 p-2 ">
               <div className="flex-1 justify-between flex">
                 {/* Logo */}
-                <h1 className="text-3xl font-bold">electro</h1>
+                <Link to={'/'} className="text-3xl font-bold">electro</Link>
                 <button onClick={sidebarMenu} className="">
                   <img className="size-6" src={icon} alt="menu" />
                 </button>
