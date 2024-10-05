@@ -1,4 +1,38 @@
+import { useNavigate } from "react-router-dom";
+import useAxios from "../hooks/useAxios";
+import { toast } from 'react-hot-toast'
 export default function Login() {
+
+  const axios = useAxios()
+  const navigate = useNavigate()
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    const loginInfo = {
+      email,
+      password,
+    };
+    try {
+      const res= await axios.post('/login', loginInfo)
+        
+      if (res.status === 200) {
+        // store jwt token 
+        localStorage.setItem('token', res.data.token);
+        toast.success('Logged in successfully')
+        navigate('/')
+      }
+
+     
+    } catch (error) {
+      toast.error('error:', error)
+
+    }
+
+
+  }
+
   return (
     <div className="p-8  mx-auto max-w-lg lg:max-w-xl">
       <h1 className="border-b pb-4 text-center text-3xl font-semibold lg:text-left">
@@ -10,28 +44,30 @@ export default function Login() {
 
       {/* form */}
       <div className="py-8">
-        <form action="" className="space-y-6">
+        <form
+          onSubmit={handleLogin}
+          action="" className="space-y-6">
           <div className="space-y-1">
-            <label htmlFor="email" className="block text-gray-700 font-medium">Username or email address *</label>
-            <input 
-              type="email" 
-              id="loginEmail" 
-              name="email" 
+            <label htmlFor="email" className="block text-gray-700 font-medium"> email address *</label>
+            <input
+              type="email"
+              id="loginEmail"
+              name="email"
               className="border-2 rounded-full border-gray-300 p-3 w-full focus:ring-2 focus:ring-yellow-400 focus:outline-none"
               placeholder="Enter your email"
-              required 
+              required
             />
           </div>
-          
+
           <div className="space-y-1">
             <label htmlFor="password" className="block text-gray-700 font-medium">Password *</label>
-            <input 
-              type="password" 
-              id="loginPassword" 
-              name="password" 
+            <input
+              type="password"
+              id="loginPassword"
+              name="password"
               className="border-2 rounded-full border-gray-300 p-3 w-full focus:ring-2 focus:ring-yellow-400 focus:outline-none"
               placeholder="Enter your password"
-              required 
+              required
             />
           </div>
 
@@ -43,8 +79,8 @@ export default function Login() {
             <a href="#" className="text-yellow-400 hover:underline">Forgot your password?</a>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="bg-yellow-400 hover:bg-black hover:text-white text-black font-semibold py-3 px-6 rounded-full w-full transition-all duration-300"
           >
             Log in

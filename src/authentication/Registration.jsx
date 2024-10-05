@@ -1,7 +1,59 @@
 import { useState } from 'react';
+import useAxios from '../hooks/useAxios';
+import { toast } from 'react-hot-toast'
+import { useNavigate } from "react-router-dom";
 
 export default function Registration() {
+  const axios = useAxios()
   const [userType, setUserType] = useState('customer');
+  // navigate 
+  const navigate = useNavigate()
+  // handle registration
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    // Common fields
+    const username = form.username.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    // Vendor-specific fields (optional)
+    const firstName = userType === 'vendor' ? form.firstName.value : null;
+    const lastName = userType === 'vendor' ? form.lastName.value : null;
+    const shopName = userType === 'vendor' ? form.shopName.value : null;
+    const shopUrl = userType === 'vendor' ? form.shopUrl.value : null;
+    const phoneNumber = userType === 'vendor' ? form.phoneNumber.value : null;
+
+    // Send data to server or handle further validations
+    console.table();
+
+    const registerInfos = {
+      userType,
+      username,
+      email,
+      password,
+      ...(userType === 'vendor' && { firstName, lastName, shopName, shopUrl, phoneNumber }),
+    }
+
+    try {
+
+      const res = await axios.post('/api/registration', {
+        registerInfos
+      });
+      console.log('Registration successful:', res.data);
+      if (res.status === 201) {
+        // store jwt token 
+        localStorage.setItem('token', res.data.token);
+        toast.success('Registration successful')
+        navigate('/')
+      }
+    } catch (error) {
+      toast.error('error:', error)
+
+    }
+  };
 
   return (
     <div className="p-8  mx-auto max-w-lg lg:max-w-xl">
@@ -30,7 +82,9 @@ export default function Registration() {
 
       {/* Common fields for both customer and vendor */}
       <div className="py-8">
-        <form className="space-y-6">
+        <form
+          onSubmit={handleRegister}
+          className="space-y-6">
           <div className="space-y-1">
             <label htmlFor="username" className="block text-gray-700 font-medium">Username *</label>
             <input

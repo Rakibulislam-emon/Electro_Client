@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 import ProductsAndShop from "../pages/ProductsDetails/ProductsAndShop";
 import Shop from "../pages/shop/Shop";
 import MyAccount from "../authentication/MyAccount";
+import ViewCartDetails from "../Payment/ViewCartDetails";
 
 export const route = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ export const route = createBrowserRouter([
            {
             path:'/my-account',
             element:<MyAccount/>
+           },
+           {
+            path:'/cart',
+            element:<ViewCartDetails/>
            }
             
         ]

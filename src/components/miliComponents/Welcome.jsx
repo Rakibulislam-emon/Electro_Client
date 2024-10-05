@@ -1,4 +1,5 @@
 import { CiShoppingCart } from "react-icons/ci";
+import {Link} from "react-router-dom"
 import { CiLocationOn } from "react-icons/ci";
 import { FaBusSimple } from "react-icons/fa6";
 import { MdOutlineAccountCircle } from "react-icons/md";
@@ -19,8 +20,10 @@ export default function Welcome() {
           <p className="flex items-center "> <CiLocationOn size={20} className="mr-2" /> <span className="border-r-2 pr-2">Store Locator</span></p>
           <p className="flex items-center "><FaBusSimple size={18} className="mr-2 " /><span className="border-r-2 pr-2"> Track Your Order</span></p>
           <p className="flex items-center"><CiShoppingCart size={20} className="mr-2" /> <span className="border-r-2 pr-2">Shop</span></p>
-          <p className="flex items-center"><MdOutlineAccountCircle size={20} className="mr-2" /> My Account</p>
-
+         <Link to={'/my-account'}>
+            <p className="flex items-center"><MdOutlineAccountCircle size={20} className="mr-2" /> My Account</p>
+  
+         </Link>
         </div>
 
       </div>

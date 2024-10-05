@@ -21,7 +21,7 @@ export default function AllDepartments() {
                         <span>all AllDepartments</span>
                     </p>
                     <div className=" items-center max-w-screen-sm w-full flex justify-between">
-                        <Link to={'/shop'} className=''>Shop</Link>
+                        <Link to={'/shop'} className='text-red-600 font-bold border-b-4 border-red-500'>Shop</Link>
                         <p>
                             featuresBands
                         </p>
@@ -29,15 +29,7 @@ export default function AllDepartments() {
                         <p>
                             gift card
                         </p>
-                        <p>
-                            gift card
-                        </p>
-                        <p>
-                            gift card
-                        </p>
-                        <p>
-                            gift card
-                        </p>
+                        
                     </div>
                 </div>
                 <div className=" items-center max-w-screen-sm flex justify-center w-full ">

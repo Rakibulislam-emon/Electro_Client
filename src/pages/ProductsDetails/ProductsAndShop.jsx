@@ -6,16 +6,15 @@ import ProductView from "./ProductsComponents/ProductView";
 import SponsorAndLatestProducts from "./ProductsComponents/SponsorAndLatestProducts";
 
 export default function ProductsAndShop() {
-
-
-
     const loaderData = useLoaderData(); // Data from loader (if applicable)
+    console.log('loaderData:', loaderData)
    
     const location = useLocation(); // Data passed via state
     const productFromState = location.state?.productOfSpecialOffer; // Accessing the passed state data
     // Prefer state data if available, otherwise fall back to loader data
     const product = productFromState || loaderData?.product;
     const relatedProducts = loaderData?.relatedProducts || [];
+    console.log('relatedProducts:', relatedProducts)
   
     return (
         <div>

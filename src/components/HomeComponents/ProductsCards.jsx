@@ -40,8 +40,8 @@ export default function ProductsCards() {
         <div className="container mx-auto px-4">
         
             <ReactTabs>
-                <TabList>
-                    <Tab>Featured</Tab>
+                <TabList >
+                    <Tab >Featured</Tab>
                     <Tab>On Sell</Tab>
                     <Tab>Top Rated</Tab>
                 </TabList>

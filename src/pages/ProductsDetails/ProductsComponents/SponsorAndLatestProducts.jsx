@@ -37,15 +37,21 @@ export default function SponsorAndLatestProducts({ relatedProducts }) {
 
           <Swiper
             slidesPerView={4}  // Default value for large screens
-            // stop when hover 
+            // stop when hover
+
 
             spaceBetween={20}
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
-
+            autoplay={{
+              delay: 2000, disableOnInteraction: true, pauseOnMouseEnter: true
+            }}
             loop={true}
             pagination={{ clickable: true }}
             modules={[Pagination, Autoplay]}
             className="mySwiper"
+            onSwiper={(swiper) => {
+              swiper.el.addEventListener('mouseenter', () => swiper.autoplay.stop());
+              swiper.el.addEventListener('mouseleave', () => swiper.autoplay.start());
+            }}
             breakpoints={{
               320: {  // Extra small screens
                 slidesPerView: 1,
@@ -71,7 +77,7 @@ export default function SponsorAndLatestProducts({ relatedProducts }) {
           >
             {relatedProducts.map((item, index) => (
               <SwiperSlide key={index} className="flex items-center  justify-center mb-8">
-                <Link className="bg-white shadow-xl rounded-lg overflow-hidden flex flex-col  w-auto  lg:h-[510px] h-auto">
+                <Link to={`/product/${item?._id}`} className="bg-white shadow-xl rounded-lg overflow-hidden flex flex-col  w-auto  lg:h-[510px] h-auto">
                   <img
                     src={item.image}
                     alt={item.name}

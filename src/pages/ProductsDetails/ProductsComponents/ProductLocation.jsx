@@ -1,4 +1,4 @@
-import  {useLocation}  from 'react-router-dom';
+import  {Link, useLocation}  from 'react-router-dom';
 
 export default function ProductLocation() {
     const location = useLocation()
@@ -7,7 +7,7 @@ export default function ProductLocation() {
     
   return (
     <div>
-        <h1 className='text-3xl'>Home ➜ {locations}   </h1>
+        <h1 className='text-3xl'><Link to={'/'}>Home</Link> ➜ {locations}   </h1>
     </div>
   )
 }
