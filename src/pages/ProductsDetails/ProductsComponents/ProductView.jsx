@@ -2,11 +2,12 @@
 import toast from "react-hot-toast";
 import ReactStars from "react-rating-stars-component";
 import { Link, useNavigate } from "react-router-dom";
-import useAxios from "../../../hooks/useAxios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useDecodedToken from "../../../hooks/useDecodedToken";
 export default function ProductView({ product }) {
+    const { email } = useDecodedToken()
 
     const navigate = useNavigate()
     const axiosSecure = useAxiosSecure()
@@ -17,11 +18,20 @@ export default function ProductView({ product }) {
 
     const { name, image, price, ratings = 5, description, availability, _id, brand, category } = product;
 
+
+    // Reset quantity and success state when the product changes
+    useEffect(() => {
+        setQuantity(1); // Reset quantity to 1 when a new product is selected
+        setSuccess(false); // Reset success message
+    }, [product]);
+
+
     // Handle add to cart functionality
     const handleAddToCart = async (id) => {
         try {
             setIsLoading(true);
             const res = await axiosSecure.post(`/api/cart/${id}`, {
+                email: email,
                 productId: id,
                 name,
                 price,

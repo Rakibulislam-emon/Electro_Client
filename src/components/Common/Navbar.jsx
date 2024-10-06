@@ -7,8 +7,30 @@ import { GiCancel } from "react-icons/gi";
 import icon from '../../assets/icons/menu-button.png';
 import SidebarHome from "./SidebarHome";
 import { Link } from "react-router-dom";
+// import useDecodedToken from "../../hooks/useDecodedToken";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function Navbar() {
+  const axios = useAxiosSecure()
+
+
+  // Fetch cart items using TanStack Query
+  const { data: cartItems = [], } = useQuery({
+    queryKey: ['cartItems'],
+    queryFn: async () => {
+      const res = await axios.get('/api/cartItems');
+      return res.data;
+    },
+  });
+  console.log('cartItems:', cartItems)
+
+  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0)
+  console.log('totalPrice:', totalPrice)
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0)
+  console.log('totalQuantity:', totalQuantity)
+  const updatedPrice = totalPrice * totalQuantity
+
   const [isOpen, setIsOpen] = useState(false); // For search modal
   const [isOpenSidebar, setIsOpenSidebar] = useState(false); // For sidebar
   const modalRef = useRef(null); // Ref for modal content
@@ -119,14 +141,22 @@ export default function Navbar() {
                 </div>
 
                 {/* Tooltip for Cart */}
-                <div className="relative group">
-                  <p className="flex items-center">
-                    <CiShoppingCart size={25} />
-                  </p>
-                  <span className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    Cart
-                  </span>
-                </div>
+              <Link to={'/cart'}>
+                  <div className="relative group">
+                    <p className="flex items-center">
+                      <CiShoppingCart size={25} />
+                      <div className="border bg-yellow-400 rounded-full w-6 flex justify-center absolute top-4 ">
+                        <span className="text-sm">{cartItems.length}</span>
+                      </div>
+                      <span className="font-bold text-xl ml-2">
+                        {updatedPrice}
+                      </span>
+                    </p>
+                    <span className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      Cart
+                    </span>
+                  </div>
+              </Link>
               </div>
             </div>
           </div>
@@ -140,7 +170,7 @@ export default function Navbar() {
         )}
       </div>
 
-      {isOpenSidebar && <SidebarHome  sidebarMenu={sidebarMenu}/>}
+      {isOpenSidebar && <SidebarHome sidebarMenu={sidebarMenu} />}
     </main>
   );
 }
