@@ -16,7 +16,7 @@ export default function ViewCartDetails() {
       return res.data;
     },
   });
-console.log(cartItems);
+ 
   // Calculate subtotal dynamically based on the cart items
   const subtotal = useMemo(() => {
     return cartItems.reduce((acc, item) => acc + item.totalPrice, 0);

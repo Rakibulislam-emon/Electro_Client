@@ -14,10 +14,10 @@ export default function Banner() {
   const [text] = useTypewriter({
     words: ['SHOP TO GET WHAT YOU LOVE',],
     loop: 0,
-    delay: 1000,    
+    delay: 1000,
   })
   return (
-    <div className='z-[1000] lg:mt-4'>
+    <div className='z-[1000]  lg:mt-4'>
       <Swiper
         style={{
           '--swiper-navigation-color': '#fff',
@@ -40,9 +40,10 @@ export default function Banner() {
             height: '100%',
           }}
         >
-          <div className="h-full max-w-screen-lg mx-auto flex items-end justify-between px-6">
+          <div className="h-full  max-w-screen-lg mx-auto flex items-end justify-between px-6">
             <div className="flex flex-col justify-center lg:justify-center lg:h-96 h-full">
-              <h1 className="text-3xl lg:text-4xl font-bold text-center lg:text-left">{text}</h1>
+               <h1 className="text-3xl  lg:text-4xl font-bold text-center lg:text-left">SHOP TO GET WHAT YOU  LOVE</h1>
+            
               <p className="text-xl lg:text-2xl mt-4 text-center lg:text-left">TIMEPIECES THAT MAKE A STATEMENT UP TO 40% OFF Start Buying</p>
               <Link to={'/shop'} className="mt-4 px-6 py-3 lg:px-8 lg:py-4 bg-blue-500 text-white font-bold mx-auto lg:mx-0 text-center">
                 <button >
@@ -69,7 +70,7 @@ export default function Banner() {
               <p className="text-xl lg:text-2xl mt-4 text-center lg:text-left">UNDER FAVORABLE SMARTWATCHES<br /> from <sup>$</sup>749 <sup>99</sup></p>
               <Link to={'/shop'} className="mt-4 px-6 py-3 lg:px-8 lg:py-4 bg-blue-500 text-white font-bold mx-auto lg:mx-0 text-center">
                 <button >
-                 Shop Now
+                  Shop Now
                 </button>
               </Link>
             </div>

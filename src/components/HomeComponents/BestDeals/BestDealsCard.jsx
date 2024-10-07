@@ -1,8 +1,50 @@
 import { Link } from "react-router-dom";
-
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+// toast
+ import { toast } from'react-hot-toast';
+import useDecodedToken from "../../../hooks/useDecodedToken";
+import { useState } from "react";
 /* eslint-disable react/prop-types */
+
 export default function BestDealsCard({ info }) {
-    const { brand, title, price, image, tags, _id } = info;
+
+   const {email} = useDecodedToken()
+   const axiosSecure = useAxiosSecure()
+   // initial quantity
+    const [quantity, setQuantity] = useState(1);
+    const { brand, title, price, image, tags, _id, description,category } = info;
+    // handle add to cart
+    const handleAddToCart = async (id) => {
+        const data = {
+          email,  id, name, price, image, quantity , description, brand, category, 
+        }
+        try {
+            const res = await axiosSecure.post(`/api/cart/${id}`,data)
+            
+             toast.success('Product added to cart successfully', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        } catch (err) {
+              console.log('err:', err)
+              toast.error('Failed to add product to cart', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            })
+        }
+
+
+    }
 
     return (
         <div className="w-full space-y-4 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col max-w-xs sm:max-w-sm lg:max-w-md mx-auto">
@@ -48,7 +90,9 @@ export default function BestDealsCard({ info }) {
                         View Details
                     </button>
                 </Link>
-                <button className="flex-grow bg-[#10B981] py-2 font-semibold text-white rounded-lg  transition duration-300 hover:bg-[#059669] hover:shadow-lg shadow-md  ml-2">
+                <button 
+                    onClick={()=> handleAddToCart(_id)}
+                className="flex-grow bg-[#10B981] py-2 font-semibold text-white rounded-lg  transition duration-300 hover:bg-[#059669] hover:shadow-lg shadow-md  ml-2">
                     Add to Cart
                 </button>
             </div>

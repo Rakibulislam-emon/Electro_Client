@@ -1,7 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useDecodedToken from '../../../hooks/useDecodedToken';
+import toast from 'react-hot-toast';
 
 export const FilterData = ({ allProducts, filterProducts }) => {
+
+  const { email } = useDecodedToken()
+  const [quantity, setQuantity] = useState(1);
+  const axiosSecure = useAxiosSecure()
+
+
   const [sortOrder, setSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(16); // Default to 16
@@ -17,6 +27,48 @@ export const FilterData = ({ allProducts, filterProducts }) => {
   // Slice products for the current page
   const startIndex = (currentPage - 1) * (productsPerPage === 'all' ? sortedProducts.length : productsPerPage);
   const paginatedProducts = productsPerPage === 'all' ? sortedProducts : sortedProducts.slice(startIndex, startIndex + productsPerPage);
+
+  // handle add to cart
+  const handleAddToCart = async (id) => {
+
+    try {
+      // Fetch the product details
+      const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
+      const product = getProduct?.data;
+
+      console.log(product);
+
+      // If product is not found
+      if (!product) {
+        toast.error('Failed to find product', {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+        return;
+      }
+
+      // Destructure the fetched product directly
+      const { name, price, image, description, brand, category } = product;
+      const infos = {
+        email, id, name, price, image, quantity, description, brand, category,
+      };
+
+      // Send product data to add to the cart
+      const res = await axiosSecure.post(`/api/cart/${id}`, infos);
+      console.log(res.data);
+      // Success toast
+      toast.success('Product added to cart successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    } catch (err) {
+      console.log('err:', err);
+      toast.error('Failed to add product to cart', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    }
+  };
 
   return (
     <div className="flex-grow p-6 bg-[#f1eded]">
@@ -55,36 +107,40 @@ export const FilterData = ({ allProducts, filterProducts }) => {
 
       {/* Display Paginated Products */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-4">
-  {paginatedProducts.map((product) => (
-    <div
-      key={product._id}
-      className="bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ease-in-out"
-    >
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-52 object-cover hover:opacity-90 transition-opacity duration-300"
-      />
-      <div className="p-6">
-        <h5 className="text-xl font-bold text-gray-800">{product.name}</h5>
-        <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
-        <p className="text-lg font-semibold text-gray-900">${product.price.toFixed(2)}</p>
-        <p className="text-sm text-yellow-500 mb-4">{product.ratings} Stars</p>
-        <p className="text-gray-700 text-sm line-clamp-3 mb-4">
-          {product.description}
-        </p>
-        <div className="flex justify-between items-center">
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-all duration-300 ease-in-out">
-            View Details
-          </button>
-          <button className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-500 transition-all duration-300 ease-in-out">
-            Add to Cart
-          </button>
-        </div>
+        {paginatedProducts.map((product) => (
+          <div
+            key={product._id}
+            className="bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ease-in-out"
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-52 object-cover hover:opacity-90 transition-opacity duration-300"
+            />
+            <div className="p-6">
+              <h5 className="text-xl font-bold text-gray-800">{product.name}</h5>
+              <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
+              <p className="text-lg font-semibold text-gray-900">${product.price.toFixed(2)}</p>
+              <p className="text-sm text-yellow-500 mb-4">{product.ratings} Stars</p>
+              <p className="text-gray-700 text-sm line-clamp-3 mb-4">
+                {product.description}
+              </p>
+              <div className="flex justify-between items-center">
+                <Link
+                  to={`/product/${product?._id}`}
+                  className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-all duration-300 ease-in-out">
+                  View Details
+                </Link>
+                <button
+                  onClick={() => handleAddToCart(product._id)}
+                  className="bg-green-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-500 transition-all duration-300 ease-in-out">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
 
       {/* Pagination Controls */}

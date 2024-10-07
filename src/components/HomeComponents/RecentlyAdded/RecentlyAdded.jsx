@@ -5,33 +5,79 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 import useAxios from '../../../hooks/useAxios';
 import { useQuery } from "@tanstack/react-query";
+import useDecodedToken from '../../../hooks/useDecodedToken';
+import { useState } from 'react';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import toast from 'react-hot-toast';
 
 export default function RecentlyAdded() {
 
+  const { email } = useDecodedToken()
+  const [quantity, setQuantity] = useState(1);
+  const axiosSecure = useAxiosSecure()
+  // get all products
+  const axios = useAxios()
+  // get all products
+  const { data: allProducts = [] } = useQuery({
+    queryKey: ['allProducts'],
+    queryFn: async () => {
+      const response = await axios.get('/api/recently');
+      return response.data
+    },
+  })
+  const sortByCreatedTime = [...allProducts].sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
+  // console.log(sortByCreatedTime);
 
-
-    // get all products
-    const axios = useAxios()
-    // get all products
-    const { data: allProducts = [] } = useQuery({
-        queryKey: ['allProducts'],
-        queryFn: async () => {
-            const response = await axios.get('/api/recently');
-            return response.data
-        },
-    })
-    const sortByCreatedTime = [...allProducts].sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
-    // console.log(sortByCreatedTime);
-
-    const recentAdded = sortByCreatedTime.slice(0,20)
+  const recentAdded = sortByCreatedTime.slice(0, 20)
   //  make a function to send data to serve
- 
+
+  const handleAddToCart = async (id) => {
+  
+    try {
+      // Fetch the product details
+      const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
+      const product = getProduct?.data;
+
+      console.log(product);
+
+      // If product is not found
+      if (!product) {
+        toast.error('Failed to find product', {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+        return;
+      }
+
+      // Destructure the fetched product directly
+      const { name, price, image, description, brand, category } = product;
+      const infos = {
+        email, id, name, price, image, quantity, description, brand, category,
+      };
+
+      // Send product data to add to the cart
+      const res = await axiosSecure.post(`/api/cart/${id}`, infos);
+      console.log(res.data);
+      // Success toast
+      toast.success('Product added to cart successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    } catch (err) {
+      console.log('err:', err);
+      toast.error('Failed to add product to cart', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    }
+  };
+
 
   return (
-    <div className="lg:p-4 ">
-         <div>
-            <h1 className='text-2xl text-gray-400  border-b my-8 pb-2'><span className='border-b-blue-500 border-b-8 rounded-full px-2'>Recently Added</span></h1>
-        </div>
+    <div id='latest-Product' className="lg:p-4 ">
+      <div>
+        <h1 className='text-2xl text-gray-400  border-b my-8 pb-2'><span className='border-b-blue-500 border-b-8 rounded-full px-2'>Recently Added</span></h1>
+      </div>
       <Swiper
         slidesPerView={6}  // Default value for large screens
         spaceBetween={20}
@@ -63,15 +109,14 @@ export default function RecentlyAdded() {
           },
         }}
       >
-       
+
         {recentAdded.map((item, index) => (
           <SwiperSlide key={index} className="flex items-center justify-center mb-8">
-            <Link
-            to={`/product/${item?._id}`}
-            className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition duration-300 hover:scale-105 w-full h-[400px]">
-              <img 
-                src={item.image} 
-                alt={item.name} 
+            <div
+              className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition duration-300 hover:scale-105 w-full h-[400px]">
+              <img
+                src={item.image}
+                alt={item.name}
                 className="w-full h-[40%] object-cover"
               />
               <div className="flex flex-col h-[60%] p-4">
@@ -84,18 +129,21 @@ export default function RecentlyAdded() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="flex gap-2 mt-auto">
-                <button className="w-1/2 bg-[#A78BCA] text-white py-2 rounded-lg hover:bg-[#9B7EBA] transition duration-300">
-                    Wishlist
-                  </button>
-                  <button className="w-1/2 bg-[#10B981] text-white py-2 rounded-lg hover:bg-[#059669] transition duration-300">
+                  <Link
+                    to={`/product/${item?._id}`}
+                    className="w-1/2 bg-[#3B82F6] py-2 font-semibold text-white rounded-lg shadow-md transition duration-300 hover:bg-[#2563EB] hover:shadow-lg flex justify-center">
+                    View Details
+                  </Link>
+                  <button
+                    onClick={() => handleAddToCart(item._id)}
+                    className="w-1/2 bg-[#10B981] text-white py-2 rounded-lg hover:bg-[#059669] transition duration-300">
                     Add to Cart
                   </button>
-                
                 </div>
               </div>
-            </Link>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>

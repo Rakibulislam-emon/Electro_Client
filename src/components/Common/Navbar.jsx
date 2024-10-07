@@ -14,7 +14,6 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 export default function Navbar() {
   const axios = useAxiosSecure()
 
-
   // Fetch cart items using TanStack Query
   const { data: cartItems = [], } = useQuery({
     queryKey: ['cartItems'],
@@ -23,13 +22,17 @@ export default function Navbar() {
       return res.data;
     },
   });
-  console.log('cartItems:', cartItems)
+  
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0)
-  console.log('totalPrice:', totalPrice)
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0)
-  console.log('totalQuantity:', totalQuantity)
-  const updatedPrice = totalPrice * totalQuantity
+
+  // const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0)
+
+  // const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0)
+  
+  const updatedPrice = cartItems.reduce((acc, item) => acc + (item?.price * item?.quantity), 0)
+ 
+
+
 
   const [isOpen, setIsOpen] = useState(false); // For search modal
   const [isOpenSidebar, setIsOpenSidebar] = useState(false); // For sidebar
@@ -149,7 +152,7 @@ export default function Navbar() {
                         <span className="text-sm">{cartItems.length}</span>
                       </div>
                       <span className="font-bold text-xl ml-2">
-                        {updatedPrice}
+                        {cartItems.length > 0? `$${updatedPrice.toFixed(2)}` : 'Cart'}
                       </span>
                     </p>
                     <span className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -5,8 +5,16 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import toast from 'react-hot-toast';
+import { useState } from 'react';
+import useDecodedToken from '../../../hooks/useDecodedToken';
 
 export default function SponsorAndLatestProducts({ relatedProducts }) {
+  const {email} = useDecodedToken()
+  // initial quantity
+  const [quantity, setQuantity] = useState(1);
+  const axiosSecure = useAxiosSecure()
   // show no data found conditionally
   if (!relatedProducts || relatedProducts.length === 0) {
     return (
@@ -15,6 +23,51 @@ export default function SponsorAndLatestProducts({ relatedProducts }) {
       </div>
     );
   }
+  // todo: here is data destructed problem need to solve 
+
+
+  // const {
+  //    name, price, image, quantity, description, brand, category,
+  // } =foundItem;
+
+  const handleAddToCart = async (id) => {
+    try {
+      // Fetch the product details
+      const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
+      const product = getProduct.data;
+  
+      // If product is not found
+      if (!product) {
+        toast.error('Failed to find product', {
+          position: 'top-right',
+          autoClose: 5000,
+        });
+        return;
+      }
+  
+      // Destructure the fetched product directly
+      const { name, price, image, description, brand, category } = product;
+      const infos = {
+        email, id, name, price, image, quantity, description, brand, category,
+      };
+  
+      // Send product data to add to the cart
+      const res = await axiosSecure.post(`/api/cart/${id}`, infos);
+  
+      // Success toast
+      toast.success('Product added to cart successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    } catch (err) {
+      console.log('err:', err);
+      toast.error('Failed to add product to cart', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    }
+  };
+  
 
 
   return (
@@ -94,7 +147,9 @@ export default function SponsorAndLatestProducts({ relatedProducts }) {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-auto">
-                      <button className="w-1/2 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                      <button
+                        onClick={() => handleAddToCart(item._id)}
+                        className="w-1/2 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
                         Add to Cart
                       </button>
                       <button className="w-1/2 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition duration-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
