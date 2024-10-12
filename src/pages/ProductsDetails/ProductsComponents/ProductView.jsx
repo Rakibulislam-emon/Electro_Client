@@ -5,9 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useDecodedToken from "../../../hooks/useDecodedToken";
+import useUser from "../../../hooks/useUser";
 export default function ProductView({ product }) {
-    const { email } = useDecodedToken()
+
+    const { email, refetch } = useUser();
+
+    // const email = token?.email ?? null
 
     const navigate = useNavigate()
     const axiosSecure = useAxiosSecure()
@@ -28,6 +31,14 @@ export default function ProductView({ product }) {
 
     // Handle add to cart functionality
     const handleAddToCart = async (id) => {
+        // Validate email
+        if (!email) {
+            toast.error("You must be logged in to add products to the cart.");
+            navigate(
+                '/my-account'
+            )
+            return;
+        }
         try {
             setIsLoading(true);
             const res = await axiosSecure.post(`/api/cart/${id}`, {
@@ -46,8 +57,10 @@ export default function ProductView({ product }) {
 
             // Check if the response status is 201 for success
             if (res.status === 201) {
+                // refetch the cart data
+                refetch()
                 setSuccess(true);
-                // toast.success("Product added to cart successfully.");
+                toast.success("Product added to cart successfully.");
             } else {
                 // Handle the case where it's not a successful status
                 toast.error("Failed to add product to cart.");

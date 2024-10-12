@@ -1,35 +1,60 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-// toast
+import useUser from "../../../hooks/useUser";
  import { toast } from'react-hot-toast';
-import useDecodedToken from "../../../hooks/useDecodedToken";
+// import useDecodedToken from "../../../hooks/useDecodedToken";
 import { useState } from "react";
 /* eslint-disable react/prop-types */
 
 export default function BestDealsCard({ info }) {
+    const navigate = useNavigate()
 
-   const {email} = useDecodedToken()
+    const { email, refetch ,  } = useUser();
+
    const axiosSecure = useAxiosSecure()
-   // initial quantity
+//    // initial quantity
     const [quantity, setQuantity] = useState(1);
+
     const { brand, title, price, image, tags, _id, description,category } = info;
     // handle add to cart
+
     const handleAddToCart = async (id) => {
+        // check validity by email
+        if (!email) {
+            toast.error("You must be logged in to add products to the cart.");
+            navigate(
+                '/my-account'
+            )
+            return;
+        }
+
         const data = {
           email,  id, name, price, image, quantity , description, brand, category, 
         }
         try {
             const res = await axiosSecure.post(`/api/cart/${id}`,data)
-            
-             toast.success('Product added to cart successfully', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
+
+             // Check if the response status is 201 for success
+             if (res.status === 201) {
+                // refetch the cart data
+                refetch()
+                toast.success('Product added to cart successfully', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+            } else {
+                // Handle the case where it's not a successful status
+                toast.error("Failed to add product to cart.");
+            }
+            if (res.status === 401) {
+                toast.error("You must be logged in to add products to the cart.");
+            }
+             
         } catch (err) {
               console.log('err:', err)
               toast.error('Failed to add product to cart', {
@@ -48,6 +73,7 @@ export default function BestDealsCard({ info }) {
 
     return (
         <div className="w-full space-y-4 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col max-w-xs sm:max-w-sm lg:max-w-md mx-auto">
+            
           <Link to={`/product/${_id}`}>
                 <div className="relative flex h-48 w-full justify-center lg:h-[260px] rounded-lg overflow-hidden border">
                     <img

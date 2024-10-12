@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 // toast
  import { toast } from'react-hot-toast';
-import useDecodedToken from "../../hooks/useDecodedToken";
- 
+// import useDecodedToken from "../../hooks/useDecodedToken";
+ import useUser from "../../hooks/useUser.jsx";
 /* eslint-disable react/prop-types */
 export default function ProductCard({ info }) {
-    const {email} = useDecodedToken()
+    const navigate = useNavigate()
+
+    const { email, refetch } = useUser();
+ 
+    // const {email} = useDecodedToken()
     const axiosSecure = useAxiosSecure()
     // initial quantity
      const [quantity, setQuantity] = useState(1);
@@ -15,21 +19,39 @@ export default function ProductCard({ info }) {
     const {  brand, title, price, image, tags, _id ,description,category, } = info;
 
     const handleAddToCart = async (id) => {
+        // validate user
+        if (!email) {
+            toast.error('You need to be logged in to add products to cart')
+               navigate('/my-account')
+            return;
+        }
         const data = {
           email,  id, name, price, image, quantity , description, brand, category, 
         }
         try {
             const res = await axiosSecure.post(`/api/cart/${id}`,data)
-            console.log('res:', res.data)
-             toast.success('Product added to cart successfully', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            })
+
+             // Check if the response status is 201 for success
+             if (res.status === 201) {
+                // refetch the cart data
+                refetch()
+                toast.success('Product added to cart successfully', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                })
+            } else {
+                // Handle the case where it's not a successful status
+                toast.error("Failed to add product to cart.");
+            }
+            if (res.status === 401) {
+                toast.error("You must be logged in to add products to the cart.");
+            }
+             
         } catch (err) {
               console.log('err:', err)
               toast.error('Failed to add product to cart', {

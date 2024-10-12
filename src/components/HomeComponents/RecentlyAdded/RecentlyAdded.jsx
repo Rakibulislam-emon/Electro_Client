@@ -2,19 +2,30 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAxios from '../../../hooks/useAxios';
 import { useQuery } from "@tanstack/react-query";
-import useDecodedToken from '../../../hooks/useDecodedToken';
+import useUser from '../../../hooks/useUser';
+// import useDecodedToken from '../../../hooks/useDecodedToken';
 import { useState } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
+import Loader from '../../Loader/Loader';
 
 export default function RecentlyAdded() {
 
-  const { email } = useDecodedToken()
+  // loading state
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate()
+
+  const { email, refetch ,isLoading } = useUser();
+// todo for temporary comment out
+  // const { email } = useDecodedToken()
   const [quantity, setQuantity] = useState(1);
   const axiosSecure = useAxiosSecure()
+
+
   // get all products
   const axios = useAxios()
   // get all products
@@ -31,50 +42,81 @@ export default function RecentlyAdded() {
   const recentAdded = sortByCreatedTime.slice(0, 20)
   //  make a function to send data to serve
 
-  const handleAddToCart = async (id) => {
-  
-    try {
-      // Fetch the product details
-      const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
-      const product = getProduct?.data;
-
-      console.log(product);
-
-      // If product is not found
-      if (!product) {
-        toast.error('Failed to find product', {
-          position: 'top-right',
-          autoClose: 5000,
-        });
+  const handleAddToCart = async (id, quantity) => {
+    // check validity by email
+    if (!email) {
+        toast.error('You must be logged in to add products to the cart',)
+           navigate('/my-account')
         return;
-      }
-
-      // Destructure the fetched product directly
-      const { name, price, image, description, brand, category } = product;
-      const infos = {
-        email, id, name, price, image, quantity, description, brand, category,
-      };
-
-      // Send product data to add to the cart
-      const res = await axiosSecure.post(`/api/cart/${id}`, infos);
-      console.log(res.data);
-      // Success toast
-      toast.success('Product added to cart successfully', {
-        position: 'top-right',
-        autoClose: 5000,
-      });
-    } catch (err) {
-      console.log('err:', err);
-      toast.error('Failed to add product to cart', {
-        position: 'top-right',
-        autoClose: 5000,
-      });
     }
-  };
+    try {
+      setLoading(true)
+        // Fetch the product details
+        const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
+        const product = getProduct?.data;
+
+        // If product is not found
+        if (!product) {
+            toast.error('Failed to find product', {
+                position: 'top-right',
+                autoClose: 5000,
+            });
+            return;
+        }
+
+        // Destructure the fetched product directly
+        const { name, price, image, description, brand, category } = product;
+        const infos = {
+            email, // Ensure 'email' is defined in your scope
+            id,
+            name,
+            price,
+            image,
+            quantity,
+            description,
+            brand,
+            category,
+        };
+
+        // Send product data to add to the cart
+        const res = await axiosSecure.post(`/api/cart/${id}`, infos);
+        console.log(res.data);
+
+        // Check for response status
+        if (res.status === 201) {
+            // Refetch the cart data
+            refetch();
+            toast.success('Product added to cart successfully', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            setLoading(false)
+        } else if (res.status === 401) {
+            toast.error("You must be logged in to add products to the cart.");
+        } else {
+            toast.error("Failed to add product to cart.");
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        toast.error('Failed to add product to cart', {
+            position: 'top-right',
+            autoClose: 5000,
+        });
+    }
+};
+
 
 
   return (
     <div id='latest-Product' className="lg:p-4 ">
+      {
+        loading && <Loader/>
+      }
       <div>
         <h1 className='text-2xl text-gray-400  border-b my-8 pb-2'><span className='border-b-blue-500 border-b-8 rounded-full px-2'>Recently Added</span></h1>
       </div>

@@ -7,31 +7,29 @@ import { GiCancel } from "react-icons/gi";
 import icon from '../../assets/icons/menu-button.png';
 import SidebarHome from "./SidebarHome";
 import { Link } from "react-router-dom";
-// import useDecodedToken from "../../hooks/useDecodedToken";
-import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useCartData from "../../hooks/useCartData";
 
 export default function Navbar() {
-  const axios = useAxiosSecure()
 
-  // Fetch cart items using TanStack Query
-  const { data: cartItems = [], } = useQuery({
-    queryKey: ['cartItems'],
-    queryFn: async () => {
-      const res = await axios.get('/api/cartItems');
-      return res.data;
-    },
-  });
+
+  const { data: cartItems = [] } = useCartData();
+  
+  
+  const updatedPrice = cartItems.reduce((acc, item) => {
+      const price = Number(item.price) || 0; // Convert to number with fallback
+      const quantity = Number(item.quantity) || 0; // Convert to number with fallback
+  
+      // Check for NaN after conversion
+      if (isNaN(price) || isNaN(quantity)) {
+          console.error('Invalid number detected:', { price, quantity });
+          return acc; // Skip this item if invalid
+      }
+  
+      return acc + (price * quantity);
+  }, 0);
   
 
-
-  // const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0)
-
-  // const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0)
   
-  const updatedPrice = cartItems.reduce((acc, item) => acc + (item?.price * item?.quantity), 0)
- 
-
 
 
   const [isOpen, setIsOpen] = useState(false); // For search modal
@@ -144,22 +142,22 @@ export default function Navbar() {
                 </div>
 
                 {/* Tooltip for Cart */}
-              <Link to={'/cart'}>
+                {<Link to={'/cart'}>
                   <div className="relative group">
-                    <p className="flex items-center">
+                    <div className="flex items-center">
                       <CiShoppingCart size={25} />
                       <div className="border bg-yellow-400 rounded-full w-6 flex justify-center absolute top-4 ">
                         <span className="text-sm">{cartItems.length}</span>
                       </div>
                       <span className="font-bold text-xl ml-2">
-                        {cartItems.length > 0? `$${updatedPrice.toFixed(2)}` : 'Cart'}
+                        {cartItems.length > 0 ? `$${updatedPrice.toFixed(2)}` : 'Cart'}
                       </span>
-                    </p>
+                    </div>
                     <span className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       Cart
                     </span>
                   </div>
-              </Link>
+                </Link>}
               </div>
             </div>
           </div>

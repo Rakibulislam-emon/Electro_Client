@@ -12,7 +12,8 @@ import Banner from "./Banner";
 
 export default function Home() {
   return (
-    <div>
+    <>
+    
       <AllDepartments/>
         <Banner/>
         <HighlightProducts/>
@@ -23,6 +24,6 @@ export default function Home() {
         <RecentlyAdded/>
         <Marquees/>
         <MixedProducts/>
-    </div>
+    </>
   )
 }
