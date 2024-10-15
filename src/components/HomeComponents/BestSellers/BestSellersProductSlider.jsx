@@ -9,8 +9,13 @@ export default function BestSellersProductSlider() {
     const { data: bestSells = [] } = useQuery({
         queryKey: ['BestSells'],
         queryFn: async () => {
-            const response = await axios.get('/api/bestSells')
+            try {
+                const response = await axios.get('/api/bestSells')
             return response.data
+            } catch (error) {
+                console.error("Error fetching best deals: ", error);
+                return []
+            }
         },
     })
 

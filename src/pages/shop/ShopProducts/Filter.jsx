@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import useAxios from '../../../hooks/useAxios';
 import { useQuery } from '@tanstack/react-query';
 import PriceRangeSlider from './PriceRangeSlider ';
+import Loader from '../../../components/Loader/Loader';
 
 const Filter = ({ setFilterProducts, setAllProducts }) => {
   const [category, setCategory] = useState('');
@@ -14,12 +15,17 @@ const Filter = ({ setFilterProducts, setAllProducts }) => {
   const [warranty, setWarranty] = useState('');
 
   const axios = useAxios();
-  const { data: allProducts = [] } = useQuery({
+  const { data: allProducts = [],isLoading } = useQuery({
     queryKey: ['allProducts'],
     queryFn: async () => {
-      const response = await axios.get('/api/allProducts');
+      try {
+        const response = await axios.get('/api/allProducts');
       setAllProducts(response.data); // Update the global state with the fetched data
       return response.data;
+      } catch (error) {
+        console.error("Error fetching best deals: ", error);
+        return []
+      }
     },
   });
 
@@ -56,9 +62,12 @@ const Filter = ({ setFilterProducts, setAllProducts }) => {
     setMinPrice(min);
     setMaxPrice(max);
   };
+  if(isLoading){
+    return <div className='z-50 absolute h-screen w-screen'><Loader/></div>
+  }
 
   return (
-    <div className="bg-[#f1eded] p-6 shadow-lg">
+    <div className="bg-[#f1eded] p-6 shadow-lg ">
       <h2 className="text-xl font-bold mb-4">Filter Products</h2>
 
       {/* Category Filter */}

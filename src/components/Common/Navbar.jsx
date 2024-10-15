@@ -8,6 +8,8 @@ import icon from '../../assets/icons/menu-button.png';
 import SidebarHome from "./SidebarHome";
 import { Link } from "react-router-dom";
 import useCartData from "../../hooks/useCartData";
+import SearchBar from "../../shared/Searchbar";
+import MobileSearchBar from "../../shared/MobileSearchBar";
 
 export default function Navbar() {
 
@@ -74,46 +76,15 @@ export default function Navbar() {
             <div className="flex items-center flex-1 p-2 ">
               <div className="flex-1 justify-between flex">
                 {/* Logo */}
-                <Link to={'/'} className="text-3xl font-bold">electro</Link>
+                <Link to={'/'} className="lg:text-3xl text-2xl  font-bold ">electro</Link>
                 <button onClick={sidebarMenu} className="">
-                  <img className="size-6" src={icon} alt="menu" />
+                  <img className="lg:size-6 size-4" src={icon} alt="menu" />
                 </button>
               </div>
             </div>
 
             {/* Form Section */}
-            <div className="flex-1 max-w-screen-md mx-auto mt-2 lg:block hidden">
-              <form className="w-full border-[#fed72f] border rounded-full flex items-center">
-                <div className="relative flex-1">
-                  <input
-                    type="search"
-                    id="search-dropdown"
-                    className="w-full p-2 pr-20 text-sm border-[#fed72f] rounded-l-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-[#fed72f] transition duration-300 ease-in-out dark:border-[#fed72f] dark:focus:ring-yellow-400"
-                    placeholder="Search Products..."
-                    required
-                  />
-                </div>
-
-                <div className="relative w-1/4">
-                  <select
-                    id="category"
-                    className="w-full p-2 text-sm text-gray-900 bg-gray-50 border-[#fed72f] shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out dark:border-[#fed72f] dark:focus:ring-yellow-400"
-                  >
-                    <option value="all">All Categories</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="fashion">Fashion</option>
-                    <option value="home">Home</option>
-                    <option value="beauty">Beauty</option>
-                  </select>
-                </div>
-
-                <button className="bg-[#fed72f] rounded-r-full px-4 py-2 flex items-center gap-x-2 whitespace-nowrap">
-                  <IoSearch className="w-5 h-5" />
-                  <span className="hidden md:inline">Search</span>
-                </button>
-              </form>
-            </div>
-
+          <SearchBar/>
             {/* Right Section */}
             <div className="flex justify-evenly items-center p-2 space-x-4 flex-1">
               <button id="search" onClick={handleSearchModal} className="lg:hidden">
@@ -164,10 +135,11 @@ export default function Navbar() {
         </div>
 
         {isOpen && (
-          <div ref={modalRef} className="flex p-4 bg-white border shadow-md">
-            <input className="border-4 w-full" type="text" placeholder="Search..." />
-            <button className="bg-blue-500 px-4 py-2 text-white">Search</button>
-          </div>
+          // <div ref={modalRef} className="flex p-4 bg-white border shadow-md">
+          //   <input className="border-4 border-black w-full" type="text" placeholder="Search..." />
+          //   <button className="bg-blue-500 px-4 py-2 text-white">Search</button>
+          // </div>
+          <MobileSearchBar modalRef={modalRef}/>
         )}
       </div>
 

@@ -7,40 +7,51 @@ export default function MixedProducts() {
 
 
 
-   // get featured products
-   const axios = useAxios()
-   const { data: featuredProducts = [] } = useQuery({
-       queryKey: ['featuredProducts'],
-       queryFn: async () => {
-           const response = await axios.get('/api/featuredProducts')
-           return response.data
-       },
-   })
-   //    get onSale products
-   const { data: onSaleProducts = [] } = useQuery({
-       queryKey: ['onSaleProducts'],
-       queryFn: async () => {
-           const response = await axios.get('/api/onSaleProducts')
-           return response.data
-       },
-   })
-   // get topRated products
-   const { data: bestSells = [] } = useQuery({
-       queryKey: ['bestSells'],
-       queryFn: async () => {
-           const response = await axios.get('/api/bestSells')
-           return response.data
-       },
-   })
- const top3featuredProducts = featuredProducts.slice(0,3)
- const top3OnSellProducts = onSaleProducts.slice(0,3)
- const top3TopSellProducts = bestSells.slice(0,3)
+    // get featured products
+    const axios = useAxios()
+    const { data: featuredProducts = [] } = useQuery({
+        queryKey: ['featuredProducts'],
+        queryFn: async () => {
+            try {
+                const response = await axios.get('/api/featuredProducts')
+                return response.data
+            } catch (error) {
+                console.error(error)
+                return [];
+            }
+        },
+    })
+    //    get onSale products
+    const { data: onSaleProducts = [] } = useQuery({
+        queryKey: ['onSaleProducts'],
+        queryFn: async () => {
+            const response = await axios.get('/api/onSaleProducts')
+            return response.data
+        },
+    })
+    // get topRated products
+    const { data: bestSells = [] } = useQuery({
+        queryKey: ['bestSells'],
+        queryFn: async () => {
+            try {
+                const response = await axios.get('/api/bestSells')
+                return response.data
+            } catch (error) {
+                console.error(error)
+                return [];
 
- const  combinedData = [...top3featuredProducts,...top3TopSellProducts,...top3OnSellProducts]
+            }
+        },
+    })
+    const top3featuredProducts = featuredProducts.slice(0, 3)
+    const top3OnSellProducts = onSaleProducts.slice(0, 3)
+    const top3TopSellProducts = bestSells.slice(0, 3)
+
+    const combinedData = [...top3featuredProducts, ...top3TopSellProducts, ...top3OnSellProducts]
 
 
 
-   
+
 
     return (
         <main className="lg:block hidden max-w-screen-2xl mx-auto p-">
@@ -55,7 +66,7 @@ export default function MixedProducts() {
                 {/* Products Grid */}
                 <div className="lg:col-span-3 grid sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-screen-xl mx-auto">
                     {combinedData.map((item, idx) => (
-                       <Link key={idx} to={`/product/${item._id}`}>
+                        <Link key={idx} to={`/product/${item._id}`}>
                             <div
                                 className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl h-28 flex"
                             >
@@ -65,7 +76,7 @@ export default function MixedProducts() {
                                     alt={item.name}
                                     className="w-7/12 h-full object-cover"
                                 />
-    
+
                                 {/* Content Section */}
                                 <div className="w-5/12 px-4  flex flex-col justify-between bg-gray-50">
                                     <div>
@@ -74,10 +85,10 @@ export default function MixedProducts() {
                                         <p>rattings</p>
                                         <p className="text-gray-600 text-sm font-medium mb-2">${item.price}</p>
                                     </div>
-    
+
                                 </div>
                             </div>
-                       </Link>
+                        </Link>
                     ))}
                 </div>
 

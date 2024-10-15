@@ -7,23 +7,26 @@ import Marquees from "../../components/HomeComponents/Marquee/Marquee";
 import MixedProducts from "../../components/HomeComponents/MixedProductsGrid/MixedProducts";
 import RecentlyAdded from "../../components/HomeComponents/RecentlyAdded/RecentlyAdded";
 import ShopAndSaveBanner from "../../components/HomeComponents/ShopAndSave/ShopAndSaveBanner";
+import ShopUi from "../../components/HomeComponents/ShopUi/ShopUi";
 import AllDepartments from "../../components/miliComponents/AllDepartments";
 import Banner from "./Banner";
-
+// import Loader from "../../components/Loader/Loader";
 export default function Home() {
+  // loading state
+  // const [loading, setisLoading] = useState(false);
   return (
     <>
-    
-      <AllDepartments/>
-        <Banner/>
-        <HighlightProducts/>
-        <FeaturedProducts/>
-        <BestDeals/>
-        <BestSeller/>
-        <ShopAndSaveBanner/>
-        <RecentlyAdded/>
-        <Marquees/>
-        <MixedProducts/>
+      <AllDepartments />
+      <Banner />
+      <HighlightProducts />
+      <ShopUi />
+      <FeaturedProducts />
+      <BestDeals />
+      <BestSeller />
+      <ShopAndSaveBanner />
+      <RecentlyAdded />
+      <Marquees />
+      <MixedProducts />
     </>
   )
 }

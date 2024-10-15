@@ -9,9 +9,6 @@ import useUser from "../../../hooks/useUser";
 export default function ProductView({ product }) {
 
     const { email, refetch } = useUser();
-
-    // const email = token?.email ?? null
-
     const navigate = useNavigate()
     const axiosSecure = useAxiosSecure()
     const [quantity, setQuantity] = useState(1);

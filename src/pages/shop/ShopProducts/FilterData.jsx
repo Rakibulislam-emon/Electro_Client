@@ -1,23 +1,24 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import useDecodedToken from '../../../hooks/useDecodedToken';
 import toast from 'react-hot-toast';
+import useUser from '../../../hooks/useUser';
 
-export const FilterData = ({ allProducts, filterProducts }) => {
-
-  const { email } = useDecodedToken()
+export const FilterData = ({ allProducts, filterProducts, searchProducts }) => {
+  const navigate = useNavigate();
+  const { email } = useUser();
   const [quantity, setQuantity] = useState(1);
-  const axiosSecure = useAxiosSecure()
-
-
+  const axiosSecure = useAxiosSecure();
   const [sortOrder, setSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(16); // Default to 16
 
-  // Function to sort products
-  const sortedProducts = (filterProducts.length > 0 ? filterProducts : allProducts).sort((a, b) => {
+  // Determine which products to display
+  const productsToDisplay = searchProducts.length > 0 ? searchProducts : (filterProducts.length > 0 ? filterProducts : allProducts);
+
+  // Sort products
+  const sortedProducts = productsToDisplay.sort((a, b) => {
     return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
   });
 
@@ -28,15 +29,19 @@ export const FilterData = ({ allProducts, filterProducts }) => {
   const startIndex = (currentPage - 1) * (productsPerPage === 'all' ? sortedProducts.length : productsPerPage);
   const paginatedProducts = productsPerPage === 'all' ? sortedProducts : sortedProducts.slice(startIndex, startIndex + productsPerPage);
 
-  // handle add to cart
+  // Handle add to cart
   const handleAddToCart = async (id) => {
+    // Validate by email
+    if (!email) {
+      toast.error('Please login to add to cart');
+      navigate('/my-account');
+      return;
+    }
 
     try {
       // Fetch the product details
       const getProduct = await axiosSecure.get(`/api/related_products/${id}`);
       const product = getProduct?.data;
-
-      console.log(product);
 
       // If product is not found
       if (!product) {
@@ -72,7 +77,7 @@ export const FilterData = ({ allProducts, filterProducts }) => {
 
   return (
     <div className="flex-grow p-6 bg-[#f1eded]">
-      <div className='lg:flex  max-w-2xl'>
+      <div className='lg:flex max-w-2xl'>
         {/* Sort Order Filter */}
         <div className="mb-4 w-full">
           <label className="block text-gray-700 font-semibold mb-2">Sort Order</label>
@@ -125,7 +130,7 @@ export const FilterData = ({ allProducts, filterProducts }) => {
               <p className="text-gray-700 text-sm line-clamp-3 mb-4">
                 {product.description}
               </p>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between gap-x-4 text-center items-center">
                 <Link
                   to={`/product/${product?._id}`}
                   className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-500 transition-all duration-300 ease-in-out">
@@ -141,7 +146,6 @@ export const FilterData = ({ allProducts, filterProducts }) => {
           </div>
         ))}
       </div>
-
 
       {/* Pagination Controls */}
       {productsPerPage !== 'all' && (

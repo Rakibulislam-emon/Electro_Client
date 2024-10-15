@@ -10,11 +10,13 @@ export default function Main() {
                 <Welcome />
             </div>
             {/* nav */}
-            <Navbar/>
-            {/* outlet */}\
-           <div className="min-h-[calc(100vh-55px)]"> <Outlet/></div>
+            <Navbar />
+            {/* outlet */}
+            <div className="min-h-[calc(100vh-55px)]">
+                <Outlet />
+            </div>
             {/* footer */}
-            <Footer/>
+            <Footer />
         </div>
     )
 }

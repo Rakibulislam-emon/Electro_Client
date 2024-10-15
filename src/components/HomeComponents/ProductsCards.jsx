@@ -10,8 +10,13 @@ export default function ProductsCards() {
     const { data: featuredProducts = [] } = useQuery({
         queryKey: ['featuredProducts'],
         queryFn: async () => {
+           try {
             const response = await axios.get('/api/featuredProducts')
             return response.data
+           } catch (error) {
+             console.error(error)
+             return []
+           }
         },
     })
     //    get onSale products
